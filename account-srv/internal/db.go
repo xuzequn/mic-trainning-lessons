@@ -13,6 +13,7 @@ import (
 )
 
 var DB *gorm.DB
+var err error
 
 func InitDB() {
 	newlogger := logger.New(
@@ -25,7 +26,7 @@ func InitDB() {
 		},
 	)
 	conn := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", "root", "123456", "127.0.0.1", 3306, "happy_account_mic_training")
-	DB, err := gorm.Open(mysql.Open(conn), &gorm.Config{
+	DB, err = gorm.Open(mysql.Open(conn), &gorm.Config{
 		Logger: newlogger,
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, //表使用英文单数形式
