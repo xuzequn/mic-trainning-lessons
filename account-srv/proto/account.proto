@@ -20,6 +20,7 @@ message AccountRes{
   int32 id=1;
   string mobile=2;
   string password=3;
+  string nikename=4;
   string gender=5;
   uint32 role=6;
 }
