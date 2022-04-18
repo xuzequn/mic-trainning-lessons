@@ -1,0 +1,8 @@
+{"level":"info","ts":1650250852.281201,"caller":"handler/AccountHandler.go:10","msg":"AccountListHandler调试通过"}
+{"level":"info","ts":1650267344.837041,"caller":"handler/AccountHandler.go:55","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = error reading from server: EOF"}
+{"level":"info","ts":1650275111.3168588,"caller":"handler/AccountHandler.go:55","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 127.0.0.1:9095: connect: connection refused\""}
+{"level":"info","ts":1650275146.005901,"caller":"handler/AccountHandler.go:55","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = error reading from server: EOF"}
+{"level":"info","ts":1650275712.949276,"caller":"handler/AccountHandler.go:55","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = error reading from server: EOF"}
+{"level":"info","ts":1650275795.420297,"caller":"handler/AccountHandler.go:56","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = error reading from server: EOF"}
+{"level":"info","ts":1650276312.970071,"caller":"handler/AccountHandler.go:59","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = error reading from server: EOF"}
+{"level":"info","ts":1650276607.3278668,"caller":"handler/AccountHandler.go:60","msg":"AccountListHandler调用失败:rpc error: code = Unavailable desc = error reading from server: EOF"}

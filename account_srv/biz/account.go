@@ -4,11 +4,12 @@ import (
 	"context"
 	"crypto/md5"
 	"errors"
+	"fmt"
 	"github.com/anaskhan96/go-password-encoder"
 	"gorm.io/gorm"
-	"mic-trainning-lessons/account-srv/internal"
-	"mic-trainning-lessons/account-srv/model"
-	"mic-trainning-lessons/account-srv/proto/pb"
+	"mic-trainning-lessons/account_srv/internal"
+	"mic-trainning-lessons/account_srv/model"
+	"mic-trainning-lessons/account_srv/proto/pb"
 	"mic-trainning-lessons/custom_error"
 )
 
@@ -34,6 +35,7 @@ func Paginate(pageNo, pageSize int) func(db *gorm.DB) *gorm.DB {
 func (a *AccountServer) GetAccountList(ctx context.Context, req *pb.PagingRequest) (*pb.AccountListRes, error) {
 	var accountList []model.Account
 	//result := internal.DB.Find(&accountList)
+	fmt.Println(req.PageNo, req.PageSize)
 	result := internal.DB.Scopes(Paginate(int(req.PageNo), int(req.PageSize))).Find(&accountList)
 	if result.Error != nil {
 		return nil, result.Error

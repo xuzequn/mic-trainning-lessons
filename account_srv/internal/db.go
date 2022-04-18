@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"log"
-	"mic-trainning-lessons/account-srv/model"
 	"os"
 	"time"
 )
@@ -35,7 +34,7 @@ func InitDB() {
 	if err != nil {
 		panic("数据库连接失败" + err.Error())
 	}
-	err = DB.AutoMigrate(&model.Account{})
+	//err = DB.AutoMigrate(&model.Account{})
 	if err != nil {
 		fmt.Println(err)
 	}
