@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"mic-trainning-lessons/account_srv/biz"
-	"mic-trainning-lessons/account_srv/internal"
 	"mic-trainning-lessons/account_srv/proto/pb"
+	"mic-trainning-lessons/internal"
 	"net"
 )
 

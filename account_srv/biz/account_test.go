@@ -3,8 +3,8 @@ package biz
 import (
 	"context"
 	"fmt"
-	"mic-trainning-lessons/account_srv/internal"
 	"mic-trainning-lessons/account_srv/proto/pb"
+	"mic-trainning-lessons/internal"
 	"testing"
 )
 

@@ -4,18 +4,28 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/dchest/captcha"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 )
 
-func GenCaptcha() error {
+func CaptchaHandler(c *gin.Context) {
+
+	mobile, ok := c.GetQuery("mobile")
+	if !ok {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "参数错误",
+		})
+		return
+	}
 	fileName := "data.png"
 	f, err := os.Create(fileName)
 	if err != nil {
 		zap.S().Error("GenCaptcha() 失败")
-		return err
+		return
 	}
 	defer f.Close()
 	var w io.WriterTo

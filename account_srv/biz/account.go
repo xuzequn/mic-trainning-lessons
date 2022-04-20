@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"github.com/anaskhan96/go-password-encoder"
 	"gorm.io/gorm"
-	"mic-trainning-lessons/account_srv/internal"
 	"mic-trainning-lessons/account_srv/model"
 	"mic-trainning-lessons/account_srv/proto/pb"
 	"mic-trainning-lessons/custom_error"
+	"mic-trainning-lessons/internal"
 )
 
 type AccountServer struct {
