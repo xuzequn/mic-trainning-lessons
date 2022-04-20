@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"github.com/dchest/captcha"
@@ -8,8 +9,10 @@ import (
 	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
+	"mic-trainning-lessons/internal"
 	"net/http"
 	"os"
+	"time"
 )
 
 func CaptchaHandler(c *gin.Context) {
@@ -21,6 +24,7 @@ func CaptchaHandler(c *gin.Context) {
 		})
 		return
 	}
+
 	fileName := "data.png"
 	f, err := os.Create(fileName)
 	if err != nil {
@@ -34,7 +38,7 @@ func CaptchaHandler(c *gin.Context) {
 	_, err = w.WriteTo(f)
 	if err != nil {
 		zap.S().Error("GenCaptcha() 失败")
-		return err
+		return
 	}
 	fmt.Println(d)
 	captcha := ""
@@ -42,12 +46,17 @@ func CaptchaHandler(c *gin.Context) {
 		captcha += fmt.Sprintf("%d", item)
 	}
 	fmt.Println(captcha)
+	internal.RedisClient.Set(context.Background(), mobile, captcha, 120*time.Second)
 	b64, err := GetBase64(fileName)
 	if err != nil {
-		return err
+		zap.S().Error("GenCaptcha() 失败")
+		return
 	}
 	fmt.Println(b64)
-	return nil
+	c.JSON(http.StatusOK, gin.H{
+		"captcha": b64,
+	})
+	return
 }
 
 func GetBase64(fileName string) (string, error) {

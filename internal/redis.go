@@ -12,13 +12,15 @@ type RedisConfig struct {
 	Password string `mapstructure:"password"`
 }
 
+var RedisClient *redis.Client
+
 func initRedis() {
 	h := ViperConf.RedisConfig.Host
 	p := ViperConf.RedisConfig.Port
 	passwd := ViperConf.RedisConfig.Password
 	addr := fmt.Sprintf("%s:%d", h, p)
 	fmt.Println(addr)
-	RedisClient := redis.NewClient(&redis.Options{Addr: addr, Password: passwd})
+	RedisClient = redis.NewClient(&redis.Options{Addr: addr, Password: passwd})
 	ping := RedisClient.Ping(context.Background())
 	fmt.Println(ping.String())
 	fmt.Println("Redis初始化完成。。。")
