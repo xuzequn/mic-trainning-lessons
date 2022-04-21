@@ -15,23 +15,25 @@ func Reg(host, name, id string, port int, tags []string) error {
 	h := ViperConf.ConsulConfig.Host
 	p := ViperConf.ConsulConfig.Port
 	defaultConfig.Address = fmt.Sprintf("%s:%d", h, p)
+	fmt.Println(defaultConfig.Address)
 	client, err := api.NewClient(defaultConfig)
 	if err != nil {
 		return err
 	}
 
 	agentServiceRegistration := new(api.AgentServiceRegistration)
-	agentServiceRegistration.Address = defaultConfig.Address
+	agentServiceRegistration.Address = host
 	agentServiceRegistration.Port = port
 	agentServiceRegistration.ID = id
 	agentServiceRegistration.Name = name
 	agentServiceRegistration.Tags = tags
 	serverAddr := fmt.Sprintf("http://%s:%d/health", host, port)
+	fmt.Println(serverAddr)
 	check := api.AgentServiceCheck{
 		HTTP:                           serverAddr,
-		Timeout:                        "3S",
+		Timeout:                        "3s",
 		Interval:                       "1s",
-		DeregisterCriticalServiceAfter: "5S",
+		DeregisterCriticalServiceAfter: "3s",
 	}
 	agentServiceRegistration.Check = &check
 	return client.Agent().ServiceRegister(agentServiceRegistration)

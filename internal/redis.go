@@ -14,7 +14,7 @@ type RedisConfig struct {
 
 var RedisClient *redis.Client
 
-func initRedis() {
+func InitRedis() {
 	h := ViperConf.RedisConfig.Host
 	p := ViperConf.RedisConfig.Port
 	passwd := ViperConf.RedisConfig.Password

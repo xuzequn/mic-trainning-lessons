@@ -199,3 +199,10 @@ func CheckMobile(mobile string) bool {
 	// (^\d{17}(\d|X|x)$) 18位身份证 最后一位为X的用户
 	//regRuler := "(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)"
 }
+
+func HealthHandler(c *gin.Context) {
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "ok",
+	})
+}
