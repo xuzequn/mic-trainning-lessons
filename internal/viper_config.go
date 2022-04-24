@@ -6,7 +6,7 @@ import (
 )
 
 var ViperConf ViperConfig
-var fileName = "../dev-config.yaml"
+var fileName = "./dev-config.yaml"
 
 func init() {
 	v := viper.New()
@@ -22,6 +22,7 @@ func init() {
 }
 
 type ViperConfig struct {
+	DBConfig         DBConfig         `mapstructure:"db"`
 	RedisConfig      RedisConfig      `mapstructure:"redis"`
 	ConsulConfig     ConsulConfig     `mapstructure:"consul"`
 	AccountSrvConfig AccountSrvConfig `mapstructure:"account_srv"`

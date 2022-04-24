@@ -1,15 +1,15 @@
 
 services:
-  redis:
-    container_name: my-redis
-    image: redis
-    restart: always
-    ports:
-      - "6379:6379"
-    command:
-      --requirepass "#foVEYdich"
-    volumes:
-      - ./redis-data/:/data
+#  redis:
+#    container_name: my-redis
+#    image: redis
+#    restart: always
+#    ports:
+#      - "6379:6379"
+#    command:
+#      --requirepass "#foVEYdich"
+#    volumes:
+#      - ./redis-data/:/data
   consul1:
       image: consul
       container_name: node1

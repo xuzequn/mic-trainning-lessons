@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"mic-trainning-lessons/account_web/handler"
 	"mic-trainning-lessons/internal"
+	"net"
 )
 
 func init() {
@@ -21,7 +22,12 @@ func init() {
 }
 
 func main() {
-	ip := flag.String("ip", "192.168.3.10", "输入Ip")
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(addrs)
+	ip := flag.String("ip", "0.0.0.0", "输入Ip")
 	port := flag.Int("port", 8081, "输入端口")
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *ip, *port)

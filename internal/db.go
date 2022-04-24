@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -14,6 +15,14 @@ import (
 var DB *gorm.DB
 var err error
 
+type DBConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	DBName   string `mapstructure:"dbName"`
+	UserName string `mapstructure:"userName"`
+	Password string `mapstructure:"password"`
+}
+
 func InitDB() {
 	newlogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), //io.writer
@@ -24,7 +33,13 @@ func InitDB() {
 			Colorful:                  true,        // 禁用彩色打印
 		},
 	)
-	conn := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", "root", "123456", "127.0.0.1", 3306, "happy_account_mic_training")
+	host := ViperConf.DBConfig.Host
+	port := ViperConf.DBConfig.Port
+	name := ViperConf.DBConfig.UserName
+	password := ViperConf.DBConfig.Password
+	dbname := ViperConf.DBConfig.DBName
+	conn := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", name, password, host, port, dbname)
+	zap.S().Infof(conn)
 	DB, err = gorm.Open(mysql.Open(conn), &gorm.Config{
 		Logger: newlogger,
 		NamingStrategy: schema.NamingStrategy{
@@ -38,4 +53,5 @@ func InitDB() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	zap.S().Info("已连接mysql")
 }
