@@ -38,7 +38,11 @@ func HandleError(err error) string {
 	return ""
 }
 
-func AccountListHandler(c *gin.Context) {
+var accountSrvHost string
+var accountSrvPort int
+var client pb.AccountServiceClient
+
+func initConsul() error {
 	// 创建注册中心客户端
 	defaultConfig := api.DefaultConfig()
 	consuleAddr := fmt.Sprintf("%s:%d",
@@ -48,52 +52,73 @@ func AccountListHandler(c *gin.Context) {
 	consulClient, err := api.NewClient(defaultConfig)
 	if err != nil {
 		zap.S().Error("AccountListHandler, 创建Consul的client失败:" + err.Error())
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "服务端内部错误",
-		})
-		return
+		//c.JSON(http.StatusOK, gin.H{
+		//	"msg": "服务端内部错误",
+		//})
+		return err
 	}
 
 	// 调用注册中心上注册的服务的调用地址并调用。
-	accountSrvHost := ""
-	accountSrvPort := 0
+	accountSrvHost = ""
+	accountSrvPort = 0
 	// 通过服务名Service 过滤到服务，获取服务的提供者地址列表
 	serviceList, err := consulClient.Agent().ServicesWithFilter(`Service=="account_srv"`)
 	if err != nil {
 		zap.S().Error("AccountListHandler, 创建Consul获取服务列表失败:" + err.Error())
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "服务端内部错误",
-		})
-		return
+		//c.JSON(http.StatusOK, gin.H{
+		//	"msg": "服务端内部错误",
+		//})
+		return err
 	}
+	// 多个配置负载均衡
 	for _, v := range serviceList {
 		accountSrvHost = v.Address
 		accountSrvPort = v.Port
-
 	}
-	pageNoStr := c.DefaultQuery("pageNo", "1")
-	pageSizeStr := c.DefaultQuery("pageSize", "3")
+	return nil
+}
+
+func initGrpcClient() error {
 	// 通过获取的服务提供者地址信息进行grpc 调用
 	grpcAddr := fmt.Sprintf("%s:%d", accountSrvHost, accountSrvPort)
-	//conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
 	conn, err := grpc.Dial(grpcAddr, grpc.WithInsecure())
 	if err != nil {
 		s := fmt.Sprintf("AccountListHandler-Grpc拨号失败:%s", err.Error())
 		log.Logger.Info(s)
-		e := HandleError(err)
-		c.JSON(http.StatusOK, gin.H{
-			"msg": e,
-		})
-		return
+		//e := HandleError(err)
+		//c.JSON(http.StatusOK, gin.H{
+		//	"msg": e,
+		//})
+		return err
 	}
+	client = pb.NewAccountServiceClient(conn)
+	return nil
+}
+
+func init() {
+	err := initConsul()
+	if err != nil {
+		panic(err)
+	}
+	err = initGrpcClient()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func AccountListHandler(c *gin.Context) {
+	// 解析参数
+	pageNoStr := c.DefaultQuery("pageNo", "1")
+	pageSizeStr := c.DefaultQuery("pageSize", "3")
+	// 调用业务逻辑
 	// 将参数从string穿换成10进制 uint32
 	pageNo, _ := strconv.ParseUint(pageNoStr, 10, 32)
 	pageSize, _ := strconv.ParseUint(pageSizeStr, 10, 32)
-	client := pb.NewAccountServiceClient(conn)
 	r, err := client.GetAccountList(context.Background(), &pb.PagingRequest{
 		PageNo:   uint32(pageNo),
 		PageSize: uint32(pageSize),
 	})
+	// 错误处理
 	if err != nil {
 		s := fmt.Sprintf("AccountListHandler调用失败:%s", err.Error())
 		log.Logger.Info(s)
@@ -103,6 +128,7 @@ func AccountListHandler(c *gin.Context) {
 		})
 		return
 	}
+	//封装数据
 	var resList []res.Account4Res
 	// 通过grpc服务获取的protobuf格式返回信息，转换成accountres类型的结构体对象切片
 	for _, item := range r.AccountList {

@@ -12,12 +12,12 @@ redis:
   password: '#foVEYdich'
 
 consul:
-  host: '192.168.0.109'
+  host: '192.168.2.1'
   port: 8500
 
 account_srv:
   srvName: 'account_srv'
-  host: '192.168.0.109'
+  host: '192.168.2.1'
   port: 9095
   tags:
     - happy
@@ -25,7 +25,7 @@ account_srv:
 
 account_web:
   srvName: 'account_web'
-  host: '192.168.0.109'
+  host: '192.168.2.1'
   port: 8081
   tags:
     - happy
