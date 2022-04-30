@@ -1,9 +1,10 @@
 nacos:
   host: '192.168.2.1'
   port: 8848
-  namespace: '4304ada7-2d53-45cc-894e-79967ea78be2'
+  namespace: '170ffa69-2b6c-4244-855c-3b609ee99ae8'
   dataid: 'account.json'
-  group: 'dev'
+  group: 'prod'
+
 
 #db:
 #  host: '127.0.0.1'
