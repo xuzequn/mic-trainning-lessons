@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	nacosconfig := internal.ViperConf.NacosConfig
+	nacosconfig := internal.NacosConf
 	serverConfigs := []constant.ServerConfig{
 		{
 			IpAddr: nacosconfig.Host,

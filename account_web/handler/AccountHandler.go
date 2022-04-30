@@ -46,8 +46,8 @@ func initConsul() error {
 	// 创建注册中心客户端
 	defaultConfig := api.DefaultConfig()
 	consuleAddr := fmt.Sprintf("%s:%d",
-		internal.ViperConf.ConsulConfig.Host,
-		internal.ViperConf.ConsulConfig.Port)
+		internal.AppConf.ConsulConfig.Host,
+		internal.AppConf.ConsulConfig.Port)
 	defaultConfig.Address = consuleAddr
 	consulClient, err := api.NewClient(defaultConfig)
 	if err != nil {
@@ -110,10 +110,12 @@ func AccountListHandler(c *gin.Context) {
 	// 解析参数
 	pageNoStr := c.DefaultQuery("pageNo", "1")
 	pageSizeStr := c.DefaultQuery("pageSize", "3")
+	fmt.Println(pageNoStr, pageNoStr)
 	// 调用业务逻辑
 	// 将参数从string穿换成10进制 uint32
 	pageNo, _ := strconv.ParseUint(pageNoStr, 10, 32)
 	pageSize, _ := strconv.ParseUint(pageSizeStr, 10, 32)
+	fmt.Println(pageNoStr, pageNoStr)
 	r, err := client.GetAccountList(context.Background(), &pb.PagingRequest{
 		PageNo:   uint32(pageNo),
 		PageSize: uint32(pageSize),

@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
@@ -19,6 +20,7 @@ func initNacos() {
 	v.SetConfigFile(fileName)
 	v.ReadInConfig()
 	err := v.Unmarshal(&NacosConf)
+	fmt.Println(NacosConf)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -54,8 +56,8 @@ func initFromNacos() {
 		panic(err)
 	}
 	fmt.Println(content)
-	//json.Unmarshal([]byte(content), &ViperConf)
-	//fmt.Println(content)
+	json.Unmarshal([]byte(content), &AppConf)
+	fmt.Println(AppConf)
 }
 
 func init() {

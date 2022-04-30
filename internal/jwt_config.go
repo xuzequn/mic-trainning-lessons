@@ -1,5 +1,5 @@
 package internal
 
 type JWTConfig struct {
-	SingingKey string `mapstructure:"signing_key"`
+	SingingKey string `mapstructure:"key" json:"key"`
 }

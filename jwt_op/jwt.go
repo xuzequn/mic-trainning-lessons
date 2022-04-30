@@ -3,7 +3,7 @@ package jwt_op
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"mic-trainning-lessons/conf"
+	"mic-trainning-lessons/internal"
 	"mic-trainning-lessons/log"
 	"time"
 )
@@ -27,7 +27,7 @@ type JWT struct {
 }
 
 func NewJWT() *JWT {
-	return &JWT{SiginKey: []byte(conf.AppConf.JWTConfig.SingingKey)}
+	return &JWT{SiginKey: []byte(internal.AppConf.JWTConfig.SingingKey)}
 }
 
 // 生成token

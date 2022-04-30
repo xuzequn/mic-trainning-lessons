@@ -10,11 +10,12 @@ import (
 )
 
 func init() {
-	err := internal.Reg(internal.ViperConf.AccountWebConfig.Host,
-		internal.ViperConf.AccountWebConfig.SrvName,
-		internal.ViperConf.AccountWebConfig.SrvName,
-		internal.ViperConf.AccountWebConfig.Port,
-		internal.ViperConf.AccountWebConfig.Tags)
+	fmt.Println(internal.AppConf.AccountWebConfig)
+	err := internal.Reg(internal.AppConf.AccountWebConfig.Host,
+		internal.AppConf.AccountWebConfig.SrvName,
+		internal.AppConf.AccountWebConfig.SrvName,
+		internal.AppConf.AccountWebConfig.Port,
+		internal.AppConf.AccountWebConfig.Tags)
 	if err != nil {
 		panic(err)
 	}

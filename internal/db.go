@@ -33,11 +33,11 @@ func InitDB() {
 			Colorful:                  true,        // 禁用彩色打印
 		},
 	)
-	host := ViperConf.DBConfig.Host
-	port := ViperConf.DBConfig.Port
-	name := ViperConf.DBConfig.UserName
-	password := ViperConf.DBConfig.Password
-	dbname := ViperConf.DBConfig.DBName
+	host := AppConf.DBConfig.Host
+	port := AppConf.DBConfig.Port
+	name := AppConf.DBConfig.UserName
+	password := AppConf.DBConfig.Password
+	dbname := AppConf.DBConfig.DBName
 	conn := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", name, password, host, port, dbname)
 	zap.S().Infof(conn)
 	DB, err = gorm.Open(mysql.Open(conn), &gorm.Config{

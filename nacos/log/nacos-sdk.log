@@ -1,0 +1,12 @@
+2022-04-30T22:59:05.771+0800	[31mERROR[0m	nacos_server/nacos_server.go:194	api</v1/cs/configs>,method:<GET>, params:<{"dataId":"account.json","group":"dev","tenant":"4304ada7-2d53-45cc-894e-79967ea78be2"}>, call domain error:<[404] config data not exist
+> , result:<config data not exist
+>
+2022-04-30T22:59:05.777+0800	[31mERROR[0m	nacos_server/nacos_server.go:194	api</v1/cs/configs>,method:<GET>, params:<{"dataId":"account.json","group":"dev","tenant":"4304ada7-2d53-45cc-894e-79967ea78be2"}>, call domain error:<[404] config data not exist
+> , result:<config data not exist
+>
+2022-04-30T22:59:05.781+0800	[31mERROR[0m	nacos_server/nacos_server.go:194	api</v1/cs/configs>,method:<GET>, params:<{"dataId":"account.json","group":"dev","tenant":"4304ada7-2d53-45cc-894e-79967ea78be2"}>, call domain error:<[404] config data not exist
+> , result:<config data not exist
+>
+2022-04-30T22:59:05.781+0800	[31mERROR[0m	config_client/config_client.go:191	get config from server error:[404] config data not exist
+ 
+2022-04-30T22:59:05.782+0800	[33mWARN[0m	config_client/config_client.go:196	[client.GetConfig] config not found, dataId: account.json, group: dev, namespaceId: 4304ada7-2d53-45cc-894e-79967ea78be2.
