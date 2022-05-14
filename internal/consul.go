@@ -10,6 +10,7 @@ type ConsulConfig struct {
 	Port int32  `mapstructure:"port"`
 }
 
+// account_web 注册到consul
 func Reg(host, name, id string, port int, tags []string) error {
 	defaultConfig := api.DefaultConfig()
 	h := AppConf.ConsulConfig.Host

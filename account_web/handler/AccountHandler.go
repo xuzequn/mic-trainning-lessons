@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/hashicorp/consul/api"
+	_ "github.com/mbobakov/grpc-consul-resolver" //
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"mic-trainning-lessons/account_srv/proto/pb"
@@ -38,50 +38,59 @@ func HandleError(err error) string {
 	return ""
 }
 
-var accountSrvHost string
-var accountSrvPort int
+//var accountSrvHost string
+//var accountSrvPort int
 var client pb.AccountServiceClient
 
-func initConsul() error {
-	// 创建注册中心客户端
-	defaultConfig := api.DefaultConfig()
-	consuleAddr := fmt.Sprintf("%s:%d",
-		internal.AppConf.ConsulConfig.Host,
-		internal.AppConf.ConsulConfig.Port)
-	defaultConfig.Address = consuleAddr
-	consulClient, err := api.NewClient(defaultConfig)
-	if err != nil {
-		zap.S().Error("AccountListHandler, 创建Consul的client失败:" + err.Error())
-		//c.JSON(http.StatusOK, gin.H{
-		//	"msg": "服务端内部错误",
-		//})
-		return err
-	}
-
-	// 调用注册中心上注册的服务的调用地址并调用。
-	accountSrvHost = ""
-	accountSrvPort = 0
-	// 通过服务名Service 过滤到服务，获取服务的提供者地址列表
-	serviceList, err := consulClient.Agent().ServicesWithFilter(`Service=="account_srv"`)
-	if err != nil {
-		zap.S().Error("AccountListHandler, 创建Consul获取服务列表失败:" + err.Error())
-		//c.JSON(http.StatusOK, gin.H{
-		//	"msg": "服务端内部错误",
-		//})
-		return err
-	}
-	// 多个配置负载均衡
-	for _, v := range serviceList {
-		accountSrvHost = v.Address
-		accountSrvPort = v.Port
-	}
-	return nil
-}
+//func initConsul() error {
+//	// 创建注册中心客户端
+//	defaultConfig := api.DefaultConfig()
+//	consuleAddr := fmt.Sprintf("%s:%d",
+//		internal.AppConf.ConsulConfig.Host,
+//		internal.AppConf.ConsulConfig.Port)
+//	defaultConfig.Address = consuleAddr
+//	consulClient, err := api.NewClient(defaultConfig)
+//	if err != nil {
+//		zap.S().Error("AccountListHandler, 创建Consul的client失败:" + err.Error())
+//		//c.JSON(http.StatusOK, gin.H{
+//		//	"msg": "服务端内部错误",
+//		//})
+//		return err
+//	}
+//
+//	// 调用注册中心上注册的服务的调用地址并调用。
+//	accountSrvHost = ""
+//	accountSrvPort = 0
+//	// 通过服务名Service 过滤到服务，获取服务的提供者地址列表
+//	serviceList, err := consulClient.Agent().ServicesWithFilter(`Service=="account_srv"`)
+//	if err != nil {
+//		zap.S().Error("AccountListHandler, 创建Consul获取服务列表失败:" + err.Error())
+//		//c.JSON(http.StatusOK, gin.H{
+//		//	"msg": "服务端内部错误",
+//		//})
+//		return err
+//	}
+//	// 多个配置负载均衡
+//	for _, v := range serviceList {
+//		accountSrvHost = v.Address
+//		accountSrvPort = v.Port
+//	}
+//	return nil
+//}
 
 func initGrpcClient() error {
+
+	// 从consul 配置负载均衡策略 获取服务调用地址。
+	addr := fmt.Sprintf("%s:%d", internal.AppConf.ConsulConfig.Host, internal.AppConf.ConsulConfig.Port)
+	dialAddr := fmt.Sprintf("consul://%s/account_srv?wait=14", addr)
+	conn, err := grpc.Dial(dialAddr, grpc.WithInsecure(), grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`))
+	if err != nil {
+		zap.S().Fatal(err)
+	}
+
 	// 通过获取的服务提供者地址信息进行grpc 调用
-	grpcAddr := fmt.Sprintf("%s:%d", accountSrvHost, accountSrvPort)
-	conn, err := grpc.Dial(grpcAddr, grpc.WithInsecure())
+	//grpcAddr := fmt.Sprintf("%s:%d", accountSrvHost, accountSrvPort)
+	//conn, err := grpc.Dial(grpcAddr, grpc.WithInsecure())
 	if err != nil {
 		s := fmt.Sprintf("AccountListHandler-Grpc拨号失败:%s", err.Error())
 		log.Logger.Info(s)
@@ -96,11 +105,11 @@ func initGrpcClient() error {
 }
 
 func init() {
-	err := initConsul()
-	if err != nil {
-		panic(err)
-	}
-	err = initGrpcClient()
+	//err := initConsul()
+	//if err != nil {
+	//	panic(err)
+	//}
+	err := initGrpcClient()
 	if err != nil {
 		panic(err)
 	}
@@ -172,16 +181,16 @@ func LoginByPasswordHandler(c *gin.Context) {
 		})
 		return
 	}
-	conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
-	if err != nil {
-		log.Logger.Error("LoginByPassword 拨号错误:" + err.Error())
-		e := HandleError(err)
-		c.JSON(http.StatusOK, gin.H{
-			"msg": e,
-		})
-		return
-	}
-	client := pb.NewAccountServiceClient(conn)
+	//conn, err := grpc.Dial("127.0.0.1:9095", grpc.WithInsecure())
+	//if err != nil {
+	//	log.Logger.Error("LoginByPassword 拨号错误:" + err.Error())
+	//	e := HandleError(err)
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"msg": e,
+	//	})
+	//	return
+	//}
+	//client := pb.NewAccountServiceClient(conn)
 	r, err := client.GetAccountByMobile(context.Background(), &pb.MobileRequest{
 		Mobile: loginByPassword.Mobile,
 	})

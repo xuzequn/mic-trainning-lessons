@@ -48,7 +48,7 @@ func (a *AccountServer) GetAccountList(ctx context.Context, req *pb.PagingReques
 		accountRes := Model2Pb(account)
 		accountListRes.AccountList = append(accountListRes.AccountList, accountRes)
 	}
-
+	fmt.Println("GetAccountList Invoked...")
 	return accountListRes, nil
 }
 
